@@ -1,0 +1,12 @@
+#####################
+# UNITY
+#####################
+Library/
+Temp/
+obj/
+Build/
+
+*.sln
+*.csproj
+*.suo
+*.DS_Store
