@@ -1,5 +1,6 @@
 ﻿using DistributionPrototype.Config;
 using DistributionPrototype.Sampler;
+using DistributionPrototype.UI;
 using LuftSchloss;
 using LuftSchloss.Util;
 using System.Diagnostics;
@@ -11,6 +12,7 @@ namespace DistributionPrototype {
 
         public NoiseConfig NoiseConfig;
         public ObjectDistributionConfig DistributionConfig;
+        public UIController UIController;
 
         private PoissonDiscSampler _sampler;
 
@@ -56,6 +58,12 @@ namespace DistributionPrototype {
             _noise = NoiseGenerator.PerlinNoise((int)_width, (int)_height, NoiseConfig.OctaveCount);
             watch.Stop();
             Debug.Log("Noise generation took " + watch.Elapsed.TotalSeconds.ToString("0.##") + "s");
+
+            watch.Reset();
+            watch.Start();
+            UIController.RenderNoise(_noise, NoiseConfig.Threshold);
+            watch.Stop();
+            Debug.Log("Noise rendering took " + watch.Elapsed.TotalSeconds.ToString("0.##") + "s");
         }
 
         private float GetNoiseVal(Vector2 sample) {
