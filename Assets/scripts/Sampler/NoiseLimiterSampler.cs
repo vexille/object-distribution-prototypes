@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DistributionPrototype
+﻿
+namespace DistributionPrototype.Sampler
 {
-	public class NoiseLimiterSampler
-	{
-		public NoiseLimiterSampler(ISampler targetSampler, float noiseThreshold)
-		{
+	public class NoiseLimiterSampler {
+		public NoiseLimiterSampler(ISampler targetSampler, float noiseThreshold) {
 		}
 	}
 }

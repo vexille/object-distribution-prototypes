@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace DistributionPrototype
+namespace DistributionPrototype.Sampler
 {
 	/// Modified from the following:
 	/// 
