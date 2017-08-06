@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
 
 namespace DistributionPrototype.Config {
-    public enum NoiseType {
-        Unity,
-        Custom
-    }
-
     [CreateAssetMenu(fileName = "NoiseConfig", menuName = "Prototype/Noise Config")]
     public class NoiseConfig : ScriptableObject {
         public NoiseType Type;

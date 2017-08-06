@@ -1,4 +1,7 @@
-﻿using System.Collections;
+﻿// WIP
+#pragma warning disable 414
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -137,3 +140,5 @@ namespace DistributionPrototype {
          */
     }
 }
+
+#pragma warning restore 414
