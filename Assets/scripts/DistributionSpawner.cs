@@ -33,26 +33,97 @@ namespace DistributionPrototype {
             _height = rend.bounds.size.z;
             var radius = DistributionConfig.GetRadius();
 
-            _sampler = new PoissonDiscSampler(_width, _height, radius * DistributionConfig.RadiusFactor);
-
             GenerateNoise();
 
+            switch (DistributionConfig.DistributionStrategy) {
+                case ObjectDistributionConfig.Strategy.PoissonSampler:
+                    GeneratePoisson(radius);
+                    break;
+                case ObjectDistributionConfig.Strategy.UniformPoissonSampler:
+                    GenerateUniformPoisson(rend.bounds, radius);
+                    break;
+                case ObjectDistributionConfig.Strategy.NonUniformPoissonSampler:
+                    GenerateNonUniformPoisson(rend.bounds, radius);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void GenerateUniformPoisson(Bounds bounds, float radius) {
+            var watch = new Stopwatch();
+            watch.Start();
+
+            var points = UniformPoissonDiskSampler.SampleRectangle(
+                new Vector2f(0f, 0f),
+                new Vector2f(_width, _height),
+                radius * DistributionConfig.RadiusFactor);
+
+            var spawned = 0;
+            
+            foreach (var sample2f in points) {
+                var sample = new Vector2(sample2f.x, sample2f.y);
+                if (SpawnSample(sample)) spawned++;
+            }
+            watch.Stop();
+
+            Debug.Log("Spawned " + spawned + " entities, took " + watch.Elapsed.TotalSeconds.ToString("0.##") + "s");
+        }
+
+        private void GenerateNonUniformPoisson(Bounds bounds, float radius) {
+            radius *= DistributionConfig.RadiusFactor;
+            var watch = new Stopwatch();
+            watch.Start();
+            var min = 100f;
+            Grid<float> distances = new Grid<float>(_noise.Width, _noise.Height);
+            for (int i = 0; i < _noise.Count; i++) {
+                var val = Mathf.Lerp(radius * 1.1f, radius * 2f, _noise.Get(i));
+                distances.Set(i, val);
+                if (val < min) min = val;
+            }
+            watch.Stop();
+            Debug.Log("Adjusted " + _noise.Count + " noise values, took " + watch.Elapsed.TotalSeconds.ToString("0.##") + "s" + ", min was " + min +", with radius " + radius);
+            watch.Reset();
+            watch.Start();
+            
+            var points = NonUniformPoissonDiskSampler.SampleRectangle(
+                new Vector2f(0f, 0f),
+                new Vector2f(_width, _height),
+                distances);
+
+            var spawned = 0;
+            foreach (var sample2f in points) {
+                var sample = new Vector2(sample2f.x, sample2f.y);
+                if (SpawnSample(sample, true, true)) spawned++;
+            }
+            watch.Stop();
+            Debug.Log("Spawned " + spawned + " entities, took " + watch.Elapsed.TotalSeconds.ToString("0.##") + "s");
+        }
+
+        private void GeneratePoisson(float radius) {
+            _sampler = new PoissonDiscSampler(_width, _height, radius * DistributionConfig.RadiusFactor);
 
             var spawned = 0;
             var watch = new Stopwatch();
             watch.Start();
             foreach (var sample in _sampler.Samples()) {
-                var noiseVal = GetNoiseVal(sample);
-                if (noiseVal > NoiseConfig.Threshold) continue;
-
-                var pos = sample.ToVector3();
-
-                Object.Instantiate(DistributionConfig.Prefab, pos + _minPos, Quaternion.identity);
-                spawned++;
+                if (SpawnSample(sample)) spawned++;
             }
             watch.Stop();
 
             Debug.Log("Spawned " + spawned + " entities, took " + watch.Elapsed.TotalSeconds.ToString("0.##") + "s");
+        }
+
+        private bool SpawnSample(Vector2 sample, bool basedOnNoise = true, bool adHoc = false) {
+            if (basedOnNoise) {
+                var noiseVal = adHoc ? Mathf.PerlinNoise(sample.x, sample.y) : GetNoiseVal(sample);
+                if (noiseVal > NoiseConfig.Threshold) return false;
+            }
+
+            var pos = sample.ToVector3();
+
+            Object.Instantiate(DistributionConfig.Prefab, pos + _minPos, Quaternion.identity);
+            return true;
         }
 
         private void GenerateNoise() {

@@ -32,5 +32,9 @@ namespace DistributionPrototype.UI {
                     break;
             }
         }
+
+        public void OnGenerateClick() {
+
+        }
     }
 }
