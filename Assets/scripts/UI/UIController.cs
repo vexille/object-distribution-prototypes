@@ -1,10 +1,12 @@
 ﻿using DistributionPrototype.Config;
 using LuftSchloss;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace DistributionPrototype.UI {
     public class UIController : MonoBehaviour {
+        public event Action OnGenerate;
         private Dictionary<NoiseType, NoiseDisplayPanel> _noiseDisplayPanels;
 
         private void Awake() {
@@ -34,7 +36,7 @@ namespace DistributionPrototype.UI {
         }
 
         public void OnGenerateClick() {
-
+            if (OnGenerate != null) OnGenerate();
         }
     }
 }
