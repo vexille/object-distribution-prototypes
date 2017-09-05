@@ -9,7 +9,13 @@ namespace DistributionPrototype.Config {
         public float RadiusFactor = 1.5f;
 
         public static float GetRadius(GameObject prefab) {
-            return prefab.GetComponentInChildren<SphereCollider>().radius;
+            var sphereCollider = prefab.GetComponentInChildren<SphereCollider>();
+            if (sphereCollider != null) {
+                return sphereCollider.radius;
+            }
+
+            var meshCollider = prefab.GetComponentInChildren<MeshRenderer>();
+            return Mathf.Max(meshCollider.bounds.extents.x, meshCollider.bounds.extents.z);
         }
 
         public float GetLargestRadius() {
@@ -21,6 +27,10 @@ namespace DistributionPrototype.Config {
             }
 
             return largest;
+        }
+
+        public GameObject GetRandomPrefab() {
+            return PrefabList[Random.Range(0, PrefabList.Length - 1)];
         }
 
         public enum Strategy {

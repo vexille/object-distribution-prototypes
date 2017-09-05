@@ -71,7 +71,7 @@ namespace DistributionPrototype.Distribution {
         }
 
         private ISamplerDecorator InstantiateSampler(ObjectDistributionConfig.Strategy strategy) {
-            var radius = ObjectDistributionConfig.GetRadius(DistributionConfig.Prefab) * DistributionConfig.RadiusFactor;
+            var radius = DistributionConfig.GetLargestRadius() * DistributionConfig.RadiusFactor;
 
             switch (strategy) {
                 case ObjectDistributionConfig.Strategy.PoissonSampler:
@@ -99,7 +99,7 @@ namespace DistributionPrototype.Distribution {
             //}
 
             var pos = sample.ToVector3();
-            var spawned = Object.Instantiate(DistributionConfig.Prefab, pos + _minPos, Quaternion.identity);
+            var spawned = Object.Instantiate(DistributionConfig.GetRandomPrefab(), pos + _minPos, Quaternion.identity);
             _spawnedObjects.Add(spawned);
         }
 
