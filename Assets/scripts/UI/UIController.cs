@@ -1,11 +1,12 @@
 ﻿using DistributionPrototype.Config;
-using LuftSchloss;
+using DistributionPrototype.Util;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace DistributionPrototype.UI {
-    public class UIController : MonoBehaviour {
+namespace DistributionPrototype.UI
+{
+	public class UIController : MonoBehaviour {
         public event Action OnGenerate;
         private Dictionary<NoiseType, NoiseDisplayPanel> _noiseDisplayPanels;
 
@@ -17,10 +18,10 @@ namespace DistributionPrototype.UI {
             }
         }
 
-        public void RenderNoise(NoiseType type, Grid<float> noise, float threshold) {
+        public void RenderNoise(NoiseType type, Grid2D<float> noise, float threshold) {
             _noiseDisplayPanels[type].RenderNoise(noise, threshold);
 
-            // I'll fix this, I swear!
+            // TODO: I'll fix this, I swear!
             switch (type) {
                 case NoiseType.Unity:
                     _noiseDisplayPanels[NoiseType.Unity].gameObject.SetActive(true);

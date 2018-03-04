@@ -1,54 +1,56 @@
-﻿using LuftSchloss.Util;
+﻿using DistributionPrototype.Util;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace LuftSchloss.UtilFake {
-    // Adapated from java source by Herman Tulleken
-    // http://www.luma.co.za/labs/2008/02/27/poisson-disk-sampling/
+namespace DistributionPrototype.Distribution.Sampler
+{
+	// Adapated from java source by Herman Tulleken
+	// http://www.luma.co.za/labs/2008/02/27/poisson-disk-sampling/
 
-    // The algorithm is from the "Fast Poisson Disk Sampling in Arbitrary Dimensions" paper by Robert Bridson
-    // http://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph07-poissondisk.pdf
+	// The algorithm is from the "Fast Poisson Disk Sampling in Arbitrary Dimensions" paper by Robert Bridson
+	// http://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph07-poissondisk.pdf
 
-    public static class NonUniformPoissonDiskSampler {
+	public static class NonUniformPoissonDiskSampler {
         public const int DefaultPointsPerIteration = 30;
 
         static readonly float SquareRootTwo = (float)Math.Sqrt(2);
 
         struct Settings {
-            public Vector2f TopLeft, LowerRight, Center;
-            public Vector2f Dimensions;
+            public Vector2 TopLeft, LowerRight, Center;
+            public Vector2 Dimensions;
             public float? RejectionSqDistance;
             public float CellSize;
             public int GridWidth, GridHeight;
 
-            public Grid<float> MinimumDistanceGrid;
+            public Grid2D<float> MinimumDistanceGrid;
 
-            public float MinimumDistance(Vector2f pointf) {
-                var point = new Vector2i(pointf);
+            public float MinimumDistance(Vector2 pointf) {
+                var point = new Vector2Int((int)pointf.x, (int)pointf.y);
                 return MinimumDistanceGrid.Get(point.x, point.y);
             }
         }
 
         struct State {
-            public Vector2f?[,] Grid;
-            public List<Vector2f> ActivePoints, Points;
+            public Vector2?[,] Grid;
+            public List<Vector2> ActivePoints, Points;
         }
 
-        public static List<Vector2f> SampleCircle(Vector2f center, float radius, Grid<float> minimumDistance) {
+        public static List<Vector2> SampleCircle(Vector2 center, float radius, Grid2D<float> minimumDistance) {
             return SampleCircle(center, radius, minimumDistance, DefaultPointsPerIteration);
         }
-        public static List<Vector2f> SampleCircle(Vector2f center, float radius, Grid<float> minimumDistance, int pointsPerIteration) {
-            return Sample(center - new Vector2f(radius), center + new Vector2f(radius), radius, minimumDistance, pointsPerIteration);
+        public static List<Vector2> SampleCircle(Vector2 center, float radius, Grid2D<float> minimumDistance, int pointsPerIteration) {
+            return Sample(center - new Vector2(radius, radius), center + new Vector2(radius, radius), radius, minimumDistance, pointsPerIteration);
         }
 
-        public static List<Vector2f> SampleRectangle(Vector2f topLeft, Vector2f lowerRight, Grid<float> minimumDistance) {
+        public static List<Vector2> SampleRectangle(Vector2 topLeft, Vector2 lowerRight, Grid2D<float> minimumDistance) {
             return SampleRectangle(topLeft, lowerRight, minimumDistance, DefaultPointsPerIteration);
         }
-        public static List<Vector2f> SampleRectangle(Vector2f topLeft, Vector2f lowerRight, Grid<float> minimumDistance, int pointsPerIteration) {
+        public static List<Vector2> SampleRectangle(Vector2 topLeft, Vector2 lowerRight, Grid2D<float> minimumDistance, int pointsPerIteration) {
             return Sample(topLeft, lowerRight, null, minimumDistance, pointsPerIteration);
         }
 
-        static List<Vector2f> Sample(Vector2f topLeft, Vector2f lowerRight, float? rejectionDistance, Grid<float> minimumDistance, int pointsPerIteration) {
+        static List<Vector2> Sample(Vector2 topLeft, Vector2 lowerRight, float? rejectionDistance, Grid2D<float> minimumDistance, int pointsPerIteration) {
             var maximumDistance = 0f;
             for (int i = 0; i < minimumDistance.Count; i++) {
                 var curr = minimumDistance.Get(i);
@@ -70,9 +72,9 @@ namespace LuftSchloss.UtilFake {
             settings.GridHeight = (int)(settings.Dimensions.y / settings.CellSize) + 1;
 
             var state = new State {
-                Grid = new Vector2f?[settings.GridWidth, settings.GridHeight],
-                ActivePoints = new List<Vector2f>(),
-                Points = new List<Vector2f>()
+                Grid = new Vector2?[settings.GridWidth, settings.GridHeight],
+                ActivePoints = new List<Vector2>(),
+                Points = new List<Vector2>()
             };
 
             AddFirstPoint(ref settings, ref state);
@@ -90,7 +92,7 @@ namespace LuftSchloss.UtilFake {
                 if (!found)
                     state.ActivePoints.RemoveAt(listIndex);
                 if (++attempts > maxAttempts) {
-                    UnityEngine.Debug.Log("D'oh!");
+                    UnityEngine.Debug.LogError("Maximum attempts exceeded!");
                     break;
                 }
             }
@@ -107,8 +109,8 @@ namespace LuftSchloss.UtilFake {
                 d = RandomHelper.Random.NextDouble();
                 var yr = settings.TopLeft.y + settings.Dimensions.y * d;
 
-                var p = new Vector2f((float)xr, (float)yr);
-                if (settings.RejectionSqDistance != null && Vector2f.DistanceSquared(settings.Center, p) > settings.RejectionSqDistance)
+                var p = new Vector2((float) xr, (float)yr);
+                if (settings.RejectionSqDistance != null && (settings.Center - p).sqrMagnitude > settings.RejectionSqDistance)
                     continue;
                 added = true;
 
@@ -121,20 +123,20 @@ namespace LuftSchloss.UtilFake {
             }
         }
 
-        static bool AddNextPoint(Vector2f point, ref Settings settings, ref State state) {
+        static bool AddNextPoint(Vector2 point, ref Settings settings, ref State state) {
             var minDistance = settings.MinimumDistance(point);
             var found = false;
             var q = GenerateRandomAround(point, minDistance);
 
             if (q.x >= settings.TopLeft.x && q.x < settings.LowerRight.x &&
                 q.y > settings.TopLeft.y && q.y < settings.LowerRight.y &&
-                (settings.RejectionSqDistance == null || Vector2f.DistanceSquared(settings.Center, q) <= settings.RejectionSqDistance)) {
+                (settings.RejectionSqDistance == null || (settings.Center - q).sqrMagnitude <= settings.RejectionSqDistance)) {
                 var qIndex = Denormalize(q, settings.TopLeft, settings.CellSize);
                 var tooClose = false;
 
                 for (var i = (int)Math.Max(0, qIndex.x - 2); i < Math.Min(settings.GridWidth, qIndex.x + 3) && !tooClose; i++)
                     for (var j = (int)Math.Max(0, qIndex.y - 2); j < Math.Min(settings.GridHeight, qIndex.y + 3) && !tooClose; j++)
-                        if (state.Grid[i, j].HasValue && Vector2f.Distance(state.Grid[i, j].Value, q) < minDistance)
+                        if (state.Grid[i, j].HasValue && Vector2.Distance(state.Grid[i, j].Value, q) < minDistance)
                             tooClose = true;
 
                 if (!tooClose) {
@@ -147,21 +149,21 @@ namespace LuftSchloss.UtilFake {
             return found;
         }
 
-        static Vector2f GenerateRandomAround(Vector2f center, float minimumDistance) {
+        static Vector2 GenerateRandomAround(Vector2 center, float minimumDistance) {
             var d = RandomHelper.Random.NextDouble();
             var radius = minimumDistance + minimumDistance * d;
 
             d = RandomHelper.Random.NextDouble();
-            var angle = MathHelper.TwoPi * d;
+            var angle = Math.PI * 2d * d;
 
             var newX = radius * Math.Sin(angle);
             var newY = radius * Math.Cos(angle);
 
-            return new Vector2f((float)(center.x + newX), (float)(center.y + newY));
+            return new Vector2((float)(center.x + newX), (float)(center.y + newY));
         }
 
-        static Vector2f Denormalize(Vector2f point, Vector2f origin, double cellSize) {
-            return new Vector2f((int)((point.x - origin.x) / cellSize), (int)((point.y - origin.y) / cellSize));
+        static Vector2 Denormalize(Vector2 point, Vector2 origin, double cellSize) {
+            return new Vector2((int)((point.x - origin.x) / cellSize), (int)((point.y - origin.y) / cellSize));
         }
     }
 }

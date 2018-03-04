@@ -1,10 +1,9 @@
 ﻿using DistributionPrototype.Distribution.Sampler;
-using LuftSchloss;
-using LuftSchloss.Util;
 using UnityEngine;
 
-namespace DistributionPrototype.Distribution.Decorator {
-    public class UniformSamplerDecorator : SamplerDecorator {
+namespace DistributionPrototype.Distribution.Decorator
+{
+	public class UniformSamplerDecorator : SamplerDecorator {
         private float _radius;
         private bool _newAlgorithm;
 
@@ -21,8 +20,8 @@ namespace DistributionPrototype.Distribution.Decorator {
 
         public int GenerateOld(SampleGeneratedDelegate generationDelegate) {
             var points = UniformPoissonDiskSampler.SampleRectangle(
-                new Vector2f(0f, 0f),
-                new Vector2f(_width, _height),
+                new Vector2(0f, 0f),
+                new Vector2(_width, _height),
                 _radius);
 
             foreach (var sample2f in points) {

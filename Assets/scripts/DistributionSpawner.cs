@@ -2,10 +2,9 @@
 using DistributionPrototype.Distribution.Decorator;
 using DistributionPrototype.Distribution.Sampler;
 using DistributionPrototype.UI;
-using LuftSchloss;
-using LuftSchloss.Util;
 using System.Collections.Generic;
 using System.Diagnostics;
+using DistributionPrototype.Util;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -22,7 +21,7 @@ namespace DistributionPrototype.Distribution {
         private Vector3 _minPos;
         private float _width;
         private float _height;
-        private Grid<float> _noise;
+        private Grid2D<float> _noise;
         private List<GameObject> _spawnedObjects;
 
         private void Start() {
@@ -120,10 +119,10 @@ namespace DistributionPrototype.Distribution {
         }
 
         // TODO: Move to NoiseGenerator
-        private Grid<float> UnityNoise(int width, int height) {
+        private Grid2D<float> UnityNoise(int width, int height) {
             float xOrigin = Random.Range(0f, 1000f);
             float yOrigin = Random.Range(0f, 1000f);
-            Grid<float> noise = new Grid<float>(width, height);
+            Grid2D<float> noise = new Grid2D<float>(width, height);
 
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {

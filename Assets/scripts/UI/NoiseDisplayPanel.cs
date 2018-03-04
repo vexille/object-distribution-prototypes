@@ -1,16 +1,17 @@
 ﻿using DistributionPrototype.Config;
-using LuftSchloss;
+using DistributionPrototype.Util;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DistributionPrototype {
-    public class NoiseDisplayPanel : MonoBehaviour {
+namespace DistributionPrototype
+{
+	public class NoiseDisplayPanel : MonoBehaviour {
         public NoiseType Type;
 
         public Image NoiseImage;
         public Image NoiseThresholdImage;
 
-        public void RenderNoise(Grid<float> noise, float threshold) {
+        public void RenderNoise(Grid2D<float> noise, float threshold) {
             var noiseTex = new Texture2D(noise.Width, noise.Height);
             var noiseThresholdTex = new Texture2D(noise.Width, noise.Height);
 

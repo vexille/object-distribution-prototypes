@@ -10,3 +10,5 @@ Build/
 *.csproj
 *.suo
 *.DS_Store
+
+.vs/
