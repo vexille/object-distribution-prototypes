@@ -77,7 +77,9 @@ namespace UnityStandardAssets.ImageEffects
             // display info text when screen blend mode cannot be used
             Camera cam = (target as BloomAndFlares).GetComponent<Camera>();
             if (cam != null) {
+#pragma warning disable 618
                 if (screenBlendMode.enumValueIndex==0 && ((cam.hdr && hdr.enumValueIndex==0) || (hdr.enumValueIndex==1))) {
+#pragma warning restore 618
                     EditorGUILayout.HelpBox("Screen blend is not supported in HDR. Using 'Add' instead.", MessageType.Info);
                 }
             }

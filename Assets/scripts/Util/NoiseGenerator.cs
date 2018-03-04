@@ -27,7 +27,7 @@ namespace DistributionPrototype.Util
 		{
 			int width = baseNoise.Width;
 			int height = baseNoise.Height;
-			
+
 			Grid2D<float>[] smoothNoiseList = new Grid2D<float>[octaveCount];
 
 			// Generate smooth noises
@@ -96,7 +96,8 @@ namespace DistributionPrototype.Util
 					float top = Mathf.Lerp(baseNoise.Get(sample_i0, sample_j0), baseNoise.Get(sample_i1, sample_j0), horizontal_blend);
 
 					// Blend the bottom two corners
-					float bottom = Mathf.Lerp(baseNoise.Get(sample_i0, sample_j1), baseNoise.Get(sample_i1, sample_j1), horizontal_blend);
+					float bottom = Mathf.Lerp(baseNoise.Get(sample_i0, sample_j1), baseNoise.Get(sample_i1, sample_j1),
+						horizontal_blend);
 
 					// Final blend
 					noise.Set(i, j, Mathf.Lerp(top, bottom, vertical_blend));
@@ -125,8 +126,10 @@ namespace DistributionPrototype.Util
 				{
 					float current = baseNoise.Get(i, j);
 					float centerPosY = j - (height * 0.5f);
-					
-					float distance = 2 * Mathf.Sqrt(current * centerPosX * current * centerPosX + current * centerPosY * current * centerPosY); // 2*sqrt(nx*nx + ny*ny) euclidian distance
+
+					float distance =
+						2 * Mathf.Sqrt(current * centerPosX * current * centerPosX +
+						               current * centerPosY * current * centerPosY); // 2*sqrt(nx*nx + ny*ny) euclidian distance
 					if (distance > max)
 					{
 						max = distance;
@@ -134,7 +137,7 @@ namespace DistributionPrototype.Util
 					result.Set(i, j, distance);
 				}
 			}
-			
+
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)

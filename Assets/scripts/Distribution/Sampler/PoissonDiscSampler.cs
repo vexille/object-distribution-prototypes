@@ -55,7 +55,6 @@ namespace DistributionPrototype.Distribution.Sampler
 
 			while (_activeSamples.Count > 0)
 			{
-
 				// Pick a random active sample
 				int i = (int) Random.value * _activeSamples.Count;
 				Vector2 sample = _activeSamples[i];
@@ -64,7 +63,6 @@ namespace DistributionPrototype.Distribution.Sampler
 				bool found = false;
 				for (int j = 0; j < k; ++j)
 				{
-
 					float angle = 2 * Mathf.PI * Random.value;
 					var rad = _radius2; // *Mathf.PerlinNoise(sample.x, sample.y);
 					float

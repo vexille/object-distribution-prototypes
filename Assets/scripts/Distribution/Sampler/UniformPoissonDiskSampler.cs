@@ -15,7 +15,7 @@ namespace DistributionPrototype.Distribution.Sampler
 	{
 		public const int DefaultPointsPerIteration = 30;
 
-		static readonly float SquareRootTwo = (float)Math.Sqrt(2);
+		static readonly float SquareRootTwo = (float) Math.Sqrt(2);
 
 		struct Settings
 		{
@@ -37,21 +37,26 @@ namespace DistributionPrototype.Distribution.Sampler
 		{
 			return SampleCircle(center, radius, minimumDistance, DefaultPointsPerIteration);
 		}
+
 		public static List<Vector2> SampleCircle(Vector2 center, float radius, float minimumDistance, int pointsPerIteration)
 		{
-			return Sample(center - new Vector2(radius, radius), center + new Vector2(radius, radius), radius, minimumDistance, pointsPerIteration);
+			return Sample(center - new Vector2(radius, radius), center + new Vector2(radius, radius), radius, minimumDistance,
+				pointsPerIteration);
 		}
 
 		public static List<Vector2> SampleRectangle(Vector2 topLeft, Vector2 lowerRight, float minimumDistance)
 		{
 			return SampleRectangle(topLeft, lowerRight, minimumDistance, DefaultPointsPerIteration);
 		}
-		public static List<Vector2> SampleRectangle(Vector2 topLeft, Vector2 lowerRight, float minimumDistance, int pointsPerIteration)
+
+		public static List<Vector2> SampleRectangle(Vector2 topLeft, Vector2 lowerRight, float minimumDistance,
+			int pointsPerIteration)
 		{
 			return Sample(topLeft, lowerRight, null, minimumDistance, pointsPerIteration);
 		}
 
-		static List<Vector2> Sample(Vector2 topLeft, Vector2 lowerRight, float? rejectionDistance, float minimumDistance, int pointsPerIteration)
+		static List<Vector2> Sample(Vector2 topLeft, Vector2 lowerRight, float? rejectionDistance, float minimumDistance,
+			int pointsPerIteration)
 		{
 			var settings = new Settings
 			{
@@ -63,8 +68,8 @@ namespace DistributionPrototype.Distribution.Sampler
 				MinimumDistance = minimumDistance,
 				RejectionSqDistance = rejectionDistance == null ? null : rejectionDistance * rejectionDistance
 			};
-			settings.GridWidth = (int)(settings.Dimensions.x / settings.CellSize) + 1;
-			settings.GridHeight = (int)(settings.Dimensions.y / settings.CellSize) + 1;
+			settings.GridWidth = (int) (settings.Dimensions.x / settings.CellSize) + 1;
+			settings.GridHeight = (int) (settings.Dimensions.y / settings.CellSize) + 1;
 
 			var state = new State
 			{
@@ -103,14 +108,14 @@ namespace DistributionPrototype.Distribution.Sampler
 				d = RandomHelper.Random.NextDouble();
 				var yr = settings.TopLeft.y + settings.Dimensions.y * d;
 
-				var p = new Vector2((float)xr, (float)yr);
+				var p = new Vector2((float) xr, (float) yr);
 				if (settings.RejectionSqDistance != null && (settings.Center - p).sqrMagnitude > settings.RejectionSqDistance)
 					continue;
 				added = true;
 
 				var index = Denormalize(p, settings.TopLeft, settings.CellSize);
 
-				state.Grid[(int)index.x, (int)index.y] = p;
+				state.Grid[(int) index.x, (int) index.y] = p;
 
 				state.ActivePoints.Add(p);
 				state.Points.Add(p);
@@ -123,23 +128,23 @@ namespace DistributionPrototype.Distribution.Sampler
 			var q = GenerateRandomAround(point, settings.MinimumDistance);
 
 			if (q.x >= settings.TopLeft.x && q.x < settings.LowerRight.x &&
-				q.y > settings.TopLeft.y && q.y < settings.LowerRight.y &&
-				(settings.RejectionSqDistance == null || (settings.Center - q).sqrMagnitude <= settings.RejectionSqDistance))
+			    q.y > settings.TopLeft.y && q.y < settings.LowerRight.y &&
+			    (settings.RejectionSqDistance == null || (settings.Center - q).sqrMagnitude <= settings.RejectionSqDistance))
 			{
 				var qIndex = Denormalize(q, settings.TopLeft, settings.CellSize);
 				var tooClose = false;
 
-				for (var i = (int)Math.Max(0, qIndex.x - 2); i < Math.Min(settings.GridWidth, qIndex.x + 3) && !tooClose; i++)
-					for (var j = (int)Math.Max(0, qIndex.y - 2); j < Math.Min(settings.GridHeight, qIndex.y + 3) && !tooClose; j++)
-						if (state.Grid[i, j].HasValue && Vector2.Distance(state.Grid[i, j].Value, q) < settings.MinimumDistance)
-							tooClose = true;
+				for (var i = (int) Math.Max(0, qIndex.x - 2); i < Math.Min(settings.GridWidth, qIndex.x + 3) && !tooClose; i++)
+				for (var j = (int) Math.Max(0, qIndex.y - 2); j < Math.Min(settings.GridHeight, qIndex.y + 3) && !tooClose; j++)
+					if (state.Grid[i, j].HasValue && Vector2.Distance(state.Grid[i, j].Value, q) < settings.MinimumDistance)
+						tooClose = true;
 
 				if (!tooClose)
 				{
 					found = true;
 					state.ActivePoints.Add(q);
 					state.Points.Add(q);
-					state.Grid[(int)qIndex.x, (int)qIndex.y] = q;
+					state.Grid[(int) qIndex.x, (int) qIndex.y] = q;
 				}
 			}
 			return found;
@@ -156,12 +161,12 @@ namespace DistributionPrototype.Distribution.Sampler
 			var newX = radius * Math.Sin(angle);
 			var newY = radius * Math.Cos(angle);
 
-			return new Vector2((float)(center.x + newX), (float)(center.y + newY));
+			return new Vector2((float) (center.x + newX), (float) (center.y + newY));
 		}
 
 		static Vector2 Denormalize(Vector2 point, Vector2 origin, double cellSize)
 		{
-			return new Vector2((int)((point.x - origin.x) / cellSize), (int)((point.y - origin.y) / cellSize));
+			return new Vector2((int) ((point.x - origin.x) / cellSize), (int) ((point.y - origin.y) / cellSize));
 		}
 	}
 }

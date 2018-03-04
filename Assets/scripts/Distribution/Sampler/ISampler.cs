@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace DistributionPrototype.Distribution.Sampler
 {
-	public interface ISampler {
+	public interface ISampler
+	{
 		IEnumerable<Vector2> Samples();
 	}
 }

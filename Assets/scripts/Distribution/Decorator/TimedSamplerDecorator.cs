@@ -1,40 +1,46 @@
 ﻿using System.Diagnostics;
 
-namespace DistributionPrototype.Distribution.Decorator {
-    public class TimedSamplerDecorator : ISamplerDecorator {
-        public delegate void PrepareDelegate(double elapsed);
-        public delegate void GenerateDelegate(double elapsed);
+namespace DistributionPrototype.Distribution.Decorator
+{
+	public class TimedSamplerDecorator : ISamplerDecorator
+	{
+		public delegate void PrepareDelegate(double elapsed);
 
-        private ISamplerDecorator _decorator;
-        private PrepareDelegate _prepare;
-        private GenerateDelegate _generate;
+		public delegate void GenerateDelegate(double elapsed);
 
-        public TimedSamplerDecorator(ISamplerDecorator decorator, PrepareDelegate prepare, GenerateDelegate generate) {
-            _decorator = decorator;
-            _prepare = prepare;
-            _generate = generate;
-        }
+		private ISamplerDecorator _decorator;
+		private PrepareDelegate _prepare;
+		private GenerateDelegate _generate;
 
-        public void Prepare(object data) {
-            var watch = new Stopwatch();
-            watch.Start();
+		public TimedSamplerDecorator(ISamplerDecorator decorator, PrepareDelegate prepare, GenerateDelegate generate)
+		{
+			_decorator = decorator;
+			_prepare = prepare;
+			_generate = generate;
+		}
 
-            _decorator.Prepare(data);
+		public void Prepare(object data)
+		{
+			var watch = new Stopwatch();
+			watch.Start();
 
-            watch.Stop();
-            if (_prepare != null) _prepare(watch.Elapsed.TotalSeconds);
-        }
+			_decorator.Prepare(data);
 
-        public int Generate(SampleGeneratedDelegate generationDelegate) {
-            var watch = new Stopwatch();
-            watch.Start();
+			watch.Stop();
+			if (_prepare != null) _prepare(watch.Elapsed.TotalSeconds);
+		}
 
-            int result = _decorator.Generate(generationDelegate);
+		public int Generate(SampleGeneratedDelegate generationDelegate)
+		{
+			var watch = new Stopwatch();
+			watch.Start();
 
-            watch.Stop();
-            if (_generate != null) _generate(watch.Elapsed.TotalSeconds);
+			int result = _decorator.Generate(generationDelegate);
 
-            return result;
-        }
-    }
+			watch.Stop();
+			if (_generate != null) _generate(watch.Elapsed.TotalSeconds);
+
+			return result;
+		}
+	}
 }

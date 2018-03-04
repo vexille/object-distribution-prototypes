@@ -1,6 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+#pragma warning disable 618
 
 namespace UnityStandardAssets.ImageEffects
 {
@@ -88,3 +89,4 @@ namespace UnityStandardAssets.ImageEffects
         }
     }
 }
+#pragma warning restore 618

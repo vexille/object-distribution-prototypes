@@ -22,7 +22,9 @@
 			get { return _arr.Length; }
 		}
 
-		public Grid2D() { }
+		public Grid2D()
+		{
+		}
 
 		public Grid2D(int width, int height)
 		{

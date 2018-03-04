@@ -42,7 +42,9 @@ namespace UnityStandardAssets.ImageEffects
 
             Camera cam = (target as Tonemapping).GetComponent<Camera>();
             if (cam != null) {
+#pragma warning disable 618
                 if (!cam.hdr) {
+#pragma warning restore 618
                     EditorGUILayout.HelpBox("The camera is not HDR enabled. This will likely break the Tonemapper.", MessageType.Warning);
                 }
                 else if (!(target as Tonemapping).validRenderTextureFormat) {
