@@ -28,9 +28,8 @@ namespace DistributionPrototype.Distribution.Decorator
 				new Vector2(_width, _height),
 				_radius);
 
-			foreach (var sample2f in points)
+			foreach (Vector2 sample in points)
 			{
-				var sample = new Vector2(sample2f.x, sample2f.y);
 				generationDelegate(sample);
 			}
 
@@ -39,10 +38,10 @@ namespace DistributionPrototype.Distribution.Decorator
 
 		public int GenerateNew(SampleGeneratedDelegate generationDelegate)
 		{
-			var _sampler = new PoissonDiscSampler(_width, _height, _radius);
+			var sampler = new PoissonDiscSampler(_width, _height, _radius);
 
 			var generated = 0;
-			foreach (var sample in _sampler.Samples())
+			foreach (var sample in sampler.Samples())
 			{
 				generationDelegate(sample);
 				generated++;

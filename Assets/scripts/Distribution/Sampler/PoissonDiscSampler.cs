@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace DistributionPrototype.Distribution.Sampler
 {
+	/// http://gregschlom.com/devlog/2014/06/29/Poisson-disc-sampling-Unity.html
+	/// 
 	/// Modified from the following:
 	/// 
 	/// Poisson-disc sampling using Bridson's algorithm.

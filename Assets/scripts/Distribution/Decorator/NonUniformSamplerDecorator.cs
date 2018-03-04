@@ -7,9 +7,8 @@ namespace DistributionPrototype.Distribution.Decorator
 	public class NonUniformSamplerDecorator : SamplerDecorator
 	{
 		private float _radius;
-		private bool _newAlgorithm;
-		private Grid2D<float> _distances;
 		private Grid2D<float> _distanceNoise;
+		private Grid2D<float> _distances;
 
 		public NonUniformSamplerDecorator(float width, float height, float radius, Grid2D<float> distanceNoise)
 			: base(width, height)
@@ -37,9 +36,8 @@ namespace DistributionPrototype.Distribution.Decorator
 				new Vector2(_width, _height),
 				_distances);
 
-			foreach (var sample2f in points)
+			foreach (Vector2 sample in points)
 			{
-				var sample = new Vector2(sample2f.x, sample2f.y);
 				generationDelegate(sample);
 			}
 

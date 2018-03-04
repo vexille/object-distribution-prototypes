@@ -8,9 +8,9 @@ namespace DistributionPrototype.Distribution.Decorator
 
 		public delegate void GenerateDelegate(double elapsed);
 
-		private ISamplerDecorator _decorator;
-		private PrepareDelegate _prepare;
-		private GenerateDelegate _generate;
+		private readonly ISamplerDecorator _decorator;
+		private readonly PrepareDelegate _prepare;
+		private readonly GenerateDelegate _generate;
 
 		public TimedSamplerDecorator(ISamplerDecorator decorator, PrepareDelegate prepare, GenerateDelegate generate)
 		{

@@ -1,10 +1,9 @@
 ﻿using DistributionPrototype.Config;
 using DistributionPrototype.Distribution.Decorator;
-using DistributionPrototype.Distribution.Sampler;
 using DistributionPrototype.UI;
+using DistributionPrototype.Util;
 using System.Collections.Generic;
 using System.Diagnostics;
-using DistributionPrototype.Util;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -16,8 +15,6 @@ namespace DistributionPrototype.Distribution
 		public ObjectDistributionConfig DistributionConfig;
 		public bool DebugPerformance;
 		public UIController UIController;
-
-		private PoissonDiscSampler _sampler;
 
 		private Vector3 _minPos;
 		private float _width;
@@ -78,7 +75,7 @@ namespace DistributionPrototype.Distribution
 
 		private ISamplerDecorator InstantiateSampler(ObjectDistributionConfig.Strategy strategy)
 		{
-			var radius = DistributionConfig.GetLargestRadius() * DistributionConfig.RadiusFactor;
+			float radius = DistributionConfig.GetLargestRadius() * DistributionConfig.RadiusFactor;
 
 			switch (strategy)
 			{
@@ -103,6 +100,7 @@ namespace DistributionPrototype.Distribution
 
 		private void SpawnSample(Vector2 sample)
 		{
+			// TODO: Cleanup?
 			//if (basedOnNoise) {
 			//    var noiseVal = adHoc ? Mathf.PerlinNoise(sample.x, sample.y) : GetNoiseVal(sample);
 			//    if (noiseVal > NoiseConfig.Threshold) return false;
@@ -118,7 +116,7 @@ namespace DistributionPrototype.Distribution
 			var watch = new Stopwatch();
 			watch.Start();
 			_noise = NoiseConfig.Type == NoiseType.Unity
-				? UnityNoise((int) _width, (int) _height)
+				? NoiseGenerator.UnityNoise ((int) _width, (int) _height)
 				: NoiseGenerator.PerlinNoise((int) _width, (int) _height, NoiseConfig.OctaveCount);
 			watch.Stop();
 			Debug.Log("Noise generation took " + watch.Elapsed.TotalSeconds.ToString("0.##") + "s");
@@ -128,32 +126,6 @@ namespace DistributionPrototype.Distribution
 			UIController.RenderNoise(NoiseConfig.Type, _noise, NoiseConfig.Threshold);
 			watch.Stop();
 			Debug.Log("Noise rendering took " + watch.Elapsed.TotalSeconds.ToString("0.##") + "s");
-		}
-
-		// TODO: Move to NoiseGenerator
-		private Grid2D<float> UnityNoise(int width, int height)
-		{
-			float xOrigin = Random.Range(0f, 1000f);
-			float yOrigin = Random.Range(0f, 1000f);
-			Grid2D<float> noise = new Grid2D<float>(width, height);
-
-			for (int y = 0; y < height; y++)
-			{
-				for (int x = 0; x < width; x++)
-				{
-					noise.Set(x, y, Mathf.PerlinNoise((xOrigin + x) / 10f, (yOrigin + y) / 10f));
-				}
-			}
-
-			return noise;
-		}
-
-		private float GetNoiseVal(Vector2 sample)
-		{
-			return _noise.Get((int) sample.x, (int) sample.y);
-			//return NoiseConfig.Type == NoiseType.Unity
-			//    ? Mathf.PerlinNoise(sample.x, sample.y)
-			//    : _noise.Get((int)sample.x, (int)sample.y);
 		}
 	}
 }

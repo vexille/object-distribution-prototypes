@@ -6,6 +6,23 @@ namespace DistributionPrototype.Util
 	// https://github.com/Flafla2/Remote2D-Engine/blob/master/Remote2D/src/com/remote/remote2d/engine/logic/Noise2D.java
 	public static class NoiseGenerator
 	{
+		public static Grid2D<float> UnityNoise(int width, int height)
+		{
+			float xOrigin = Random.Range(0f, 1000f);
+			float yOrigin = Random.Range(0f, 1000f);
+			Grid2D<float> noise = new Grid2D<float>(width, height);
+
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					noise.Set(x, y, Mathf.PerlinNoise((xOrigin + x) / 10f, (yOrigin + y) / 10f));
+				}
+			}
+
+			return noise;
+		}
+
 		public static Grid2D<float> WhiteNoise(int width, int height)
 		{
 			Grid2D<float> noise = new Grid2D<float>(width, height);

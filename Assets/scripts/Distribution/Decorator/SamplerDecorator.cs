@@ -5,7 +5,7 @@
 		protected float _width;
 		protected float _height;
 
-		public SamplerDecorator(float width, float height)
+		protected SamplerDecorator(float width, float height)
 		{
 			_width = width;
 			_height = height;
