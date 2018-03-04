@@ -79,11 +79,11 @@ namespace DistributionPrototype.Distribution
 
 			switch (strategy)
 			{
-				case ObjectDistributionConfig.Strategy.PoissonSampler:
-					return new UniformSamplerDecorator(_width, _height, radius, false);
+				case ObjectDistributionConfig.Strategy.UniformPoissonSamplerA:
+					return new UniformSamplerADecorator(_width, _height, radius);
 
-				case ObjectDistributionConfig.Strategy.UniformPoissonSampler:
-					return new UniformSamplerDecorator(_width, _height, radius, true);
+				case ObjectDistributionConfig.Strategy.UniformPoissonSamplerB:
+					return new UniformSamplerADecorator(_width, _height, radius);
 
 				case ObjectDistributionConfig.Strategy.NonUniformPoissonSampler:
 					return new NonUniformSamplerDecorator(_width, _height, radius, _noise);
@@ -119,13 +119,11 @@ namespace DistributionPrototype.Distribution
 				? NoiseGenerator.UnityNoise ((int) _width, (int) _height)
 				: NoiseGenerator.PerlinNoise((int) _width, (int) _height, NoiseConfig.OctaveCount);
 			watch.Stop();
-			Debug.Log("Noise generation took " + watch.Elapsed.TotalSeconds.ToString("0.##") + "s");
 
 			watch.Reset();
 			watch.Start();
 			UIController.RenderNoise(NoiseConfig.Type, _noise, NoiseConfig.Threshold);
 			watch.Stop();
-			Debug.Log("Noise rendering took " + watch.Elapsed.TotalSeconds.ToString("0.##") + "s");
 		}
 	}
 }

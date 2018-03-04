@@ -42,8 +42,8 @@ namespace DistributionPrototype.Config
 
 		public enum Strategy
 		{
-			PoissonSampler,
-			UniformPoissonSampler,
+			UniformPoissonSamplerA,
+			UniformPoissonSamplerB,
 			NonUniformPoissonSampler
 		}
 	}

@@ -9,8 +9,9 @@ namespace DistributionPrototype.UI
 	public class UIController : MonoBehaviour
 	{
 		public event Action OnGenerate;
+		
 		private Dictionary<NoiseType, NoiseDisplayPanel> _noiseDisplayPanels;
-
+		
 		private void Awake()
 		{
 			_noiseDisplayPanels = new Dictionary<NoiseType, NoiseDisplayPanel>();

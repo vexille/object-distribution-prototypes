@@ -1,4 +1,5 @@
-﻿using DistributionPrototype.Config;
+﻿using System;
+using DistributionPrototype.Config;
 using DistributionPrototype.Util;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,9 +18,9 @@ namespace DistributionPrototype
 			var noiseTex = new Texture2D(noise.Width, noise.Height);
 			var noiseThresholdTex = new Texture2D(noise.Width, noise.Height);
 
-			for (int y = 0; y < noise.Width; y++)
+			for (int x = 0; x < noise.Width; x++)
 			{
-				for (int x = 0; x < noise.Height; x++)
+				for (int y = 0; y < noise.Height; y++)
 				{
 					var val = noise.Get(x, y);
 					var maskColor = val <= threshold ? Color.white : Color.black;
