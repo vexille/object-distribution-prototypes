@@ -2,6 +2,7 @@
 
 namespace DistributionPrototype.Distribution.Decorator
 {
+	// TODO: Doc
 	public delegate void SampleGeneratedDelegate(Vector2 sample);
 
 	public interface ISamplerDecorator

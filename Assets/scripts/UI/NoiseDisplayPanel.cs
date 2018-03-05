@@ -1,6 +1,6 @@
-﻿using System;
-using DistributionPrototype.Config;
+﻿using DistributionPrototype.Messages;
 using DistributionPrototype.Util;
+using Frictionless;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,10 +8,19 @@ namespace DistributionPrototype
 {
 	public class NoiseDisplayPanel : MonoBehaviour
 	{
-		public NoiseType Type;
-
 		public Image NoiseImage;
 		public Image NoiseThresholdImage;
+
+		private void Start()
+		{
+			ServiceFactory.Instance.Resolve<MessageRouter>()
+				.AddHandler<NoiseGeneratedMessage>(OnNoiseGenerated);
+		}
+
+		private void OnNoiseGenerated(NoiseGeneratedMessage message)
+		{
+			RenderNoise(message.Noise, message.Threshold);
+		}
 
 		public void RenderNoise(Grid2D<float> noise, float threshold)
 		{

@@ -1,9 +1,10 @@
 ﻿using DistributionPrototype.Config;
 using DistributionPrototype.Distribution.Decorator;
+using DistributionPrototype.Messages;
 using DistributionPrototype.UI;
 using DistributionPrototype.Util;
+using Frictionless;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -31,8 +32,9 @@ namespace DistributionPrototype.Distribution
 
 			_width = rend.bounds.size.x;
 			_height = rend.bounds.size.z;
-
-			UIController.OnGenerate += Generate;
+			
+			ServiceFactory.Instance.Resolve<MessageRouter>()
+				.AddHandler<GenerateRequestedMessage>(m => Generate());
 
 			Generate();
 		}
@@ -113,17 +115,17 @@ namespace DistributionPrototype.Distribution
 
 		private void GenerateNoise()
 		{
-			var watch = new Stopwatch();
-			watch.Start();
 			_noise = NoiseConfig.Type == NoiseType.Unity
 				? NoiseGenerator.UnityNoise ((int) _width, (int) _height)
 				: NoiseGenerator.PerlinNoise((int) _width, (int) _height, NoiseConfig.OctaveCount);
-			watch.Stop();
-
-			watch.Reset();
-			watch.Start();
-			UIController.RenderNoise(NoiseConfig.Type, _noise, NoiseConfig.Threshold);
-			watch.Stop();
+			
+			ServiceFactory.Instance.Resolve<MessageRouter>()
+				.RaiseMessage(new NoiseGeneratedMessage
+				{
+					Noise = _noise,
+					Type = NoiseConfig.Type,
+					Threshold = NoiseConfig.Threshold
+				});
 		}
 	}
 }
