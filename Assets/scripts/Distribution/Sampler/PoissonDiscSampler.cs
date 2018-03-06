@@ -23,7 +23,7 @@ namespace DistributionPrototype.Distribution.Sampler
 	///
 	/// Author: Gregory Schlomoff (gregory.schlomoff@gmail.com)
 	/// Released in the public domain
-	public class PoissonDiscSampler : ISampler
+	public class PoissonDiscSampler
 	{
 		private const int k = 30; // Maximum number of attempts before marking a sample as inactive.
 

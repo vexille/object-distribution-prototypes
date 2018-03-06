@@ -11,7 +11,7 @@
 			_height = height;
 		}
 
-		public virtual void Prepare(object data)
+		public virtual void Prepare()
 		{
 		}
 

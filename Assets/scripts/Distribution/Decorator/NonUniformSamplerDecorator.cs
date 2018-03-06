@@ -17,9 +17,9 @@ namespace DistributionPrototype.Distribution.Decorator
 			_distanceNoise = distanceNoise;
 		}
 
-		public override void Prepare(object data)
+		public override void Prepare()
 		{
-			base.Prepare(data);
+			base.Prepare();
 
 			_distances = new Grid2D<float>(_distanceNoise.Width, _distanceNoise.Height);
 			for (int i = 0; i < _distanceNoise.Count; i++)

@@ -13,7 +13,7 @@ namespace DistributionPrototype.UI
 		public void OnGenerateClick()
 		{
 			ServiceFactory.Instance.Resolve<MessageRouter>()
-				.RaiseMessage(new GenerateRequestedMessage());
+				.RaiseMessage(new GenerationRequestedMessage());
 		}
 	}
 }

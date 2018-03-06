@@ -12,19 +12,20 @@ namespace DistributionPrototype.Distribution.Decorator
 		private readonly PrepareDelegate _prepare;
 		private readonly GenerateDelegate _generate;
 
-		public TimedSamplerDecorator(ISamplerDecorator decorator, PrepareDelegate prepare, GenerateDelegate generate)
+		public TimedSamplerDecorator(ISamplerDecorator decorator, 
+			PrepareDelegate prepare, GenerateDelegate generate)
 		{
 			_decorator = decorator;
 			_prepare = prepare;
 			_generate = generate;
 		}
 
-		public void Prepare(object data)
+		public void Prepare()
 		{
 			var watch = new Stopwatch();
 			watch.Start();
 
-			_decorator.Prepare(data);
+			_decorator.Prepare();
 
 			watch.Stop();
 			if (_prepare != null) _prepare(watch.Elapsed.TotalSeconds);

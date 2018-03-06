@@ -1,4 +1,4 @@
 ﻿namespace DistributionPrototype.Messages
 {
-	public class GenerateRequestedMessage { }
+	public class GenerationRequestedMessage { }
 }

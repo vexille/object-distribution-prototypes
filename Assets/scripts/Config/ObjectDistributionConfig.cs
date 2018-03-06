@@ -5,10 +5,20 @@ namespace DistributionPrototype.Config
 	[CreateAssetMenu(fileName = "ObjectDistributionConfig", menuName = "Prototype/Object Distribution Config")]
 	public class ObjectDistributionConfig : ScriptableObject
 	{
+		public enum Strategy
+		{
+			UniformPoissonSamplerA,
+			UniformPoissonSamplerB,
+			NonUniformPoissonSampler
+		}
+
 		public GameObject Prefab;
 		public GameObject[] PrefabList;
 		public Strategy DistributionStrategy;
 		public float RadiusFactor = 1.5f;
+		public bool NoiseLimitedSpawn;
+		[Range(0f, 1f)]
+		public float SpawnThreshold = 0.5f;
 
 		public static float GetRadius(GameObject prefab)
 		{
@@ -38,13 +48,6 @@ namespace DistributionPrototype.Config
 		public GameObject GetRandomPrefab()
 		{
 			return PrefabList[Random.Range(0, PrefabList.Length - 1)];
-		}
-
-		public enum Strategy
-		{
-			UniformPoissonSamplerA,
-			UniformPoissonSamplerB,
-			NonUniformPoissonSampler
 		}
 	}
 }
