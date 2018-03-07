@@ -24,7 +24,7 @@ namespace DistributionPrototype.Distribution.Decorator
 			_distances = new Grid2D<float>(_distanceNoise.Width, _distanceNoise.Height);
 			for (int i = 0; i < _distanceNoise.Count; i++)
 			{
-				var val = Mathf.Lerp(_radius * 1.1f, _radius * 2f, _distanceNoise.Get(i));
+				var val = Mathf.Lerp(_radius * 1.1f, _radius * 3f, _distanceNoise.Get(i));
 				_distances.Set(i, val);
 			}
 		}

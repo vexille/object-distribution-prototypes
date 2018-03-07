@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a42c4d455d5201448138f2a46636aac, type: 3}
   m_Name: NatureNoiseConfig
   m_EditorClassIdentifier: 
-  Type: 0
-  OctaveCount: 6
+  Type: 1
+  OctaveCount: 7
