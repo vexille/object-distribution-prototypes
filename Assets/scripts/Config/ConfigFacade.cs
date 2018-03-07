@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace DistributionPrototype.Config
@@ -52,6 +54,7 @@ namespace DistributionPrototype.Config
 		/// </summary>
 		public void PersistChanges()
 		{
+#if UNITY_EDITOR
 			var noiseConfigPath = AssetDatabase.GetAssetPath(_sourceNoiseConfig);
 			var distributionConfigPath = AssetDatabase.GetAssetPath(_sourceDistributionConfig);
 
@@ -61,6 +64,7 @@ namespace DistributionPrototype.Config
 			AssetDatabase.CreateAsset(_sourceNoiseConfig, noiseConfigPath);
 			AssetDatabase.CreateAsset(_sourceDistributionConfig, distributionConfigPath);
 			AssetDatabase.SaveAssets();
+#endif
 		}
 	}
 }
