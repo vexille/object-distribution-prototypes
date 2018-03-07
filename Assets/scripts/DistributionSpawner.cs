@@ -9,16 +9,8 @@ namespace DistributionPrototype.Distribution
 {
 	public class DistributionSpawner : MonoBehaviour
 	{
-		[SerializeField]
-		private NoiseConfig _noiseConfig;
-
-		[SerializeField]
-		private ObjectDistributionConfig _distributionConfig;
-
-		[SerializeField]
-		private bool _debugPerformance;
-
 		private MessageRouter _messageRouter;
+		private ConfigFacade _configFacade;
 		private List<GameObject> _spawnedObjects;
 		private Vector3 _minPos;
 		private float _width;
@@ -36,6 +28,8 @@ namespace DistributionPrototype.Distribution
 
 			_messageRouter = ServiceFactory.Instance.Resolve<MessageRouter>();
 			_messageRouter.AddHandler<GenerationRequestedMessage>(m => Generate());
+
+			_configFacade = ServiceFactory.Instance.Resolve<ConfigFacade>();
 
 			Generate();
 		}
@@ -62,8 +56,10 @@ namespace DistributionPrototype.Distribution
 
 		public void SpawnObjects()
 		{
-			var decoratorFactory = new SamplerDecoratorFactory(_noiseConfig, _distributionConfig);
-			decoratorFactory.DebugPerformance = _debugPerformance;
+			var decoratorFactory = new SamplerDecoratorFactory(
+				_configFacade.NoiseConfig,
+				_configFacade.DistributionConfig);
+			decoratorFactory.DebugPerformance = _configFacade.DebugPerformance;
 			ISamplerDecorator sampler = decoratorFactory.GetSamplerDecorator(_width, _height);
 			
 			sampler.Prepare();
@@ -71,7 +67,7 @@ namespace DistributionPrototype.Distribution
 			{
 				var pos = sample.ToVector3();
 				var spawned = Instantiate(
-					_distributionConfig.GetRandomPrefab(), 
+					_configFacade.DistributionConfig.GetRandomPrefab(), 
 					pos + _minPos,
 					Quaternion.identity);
 

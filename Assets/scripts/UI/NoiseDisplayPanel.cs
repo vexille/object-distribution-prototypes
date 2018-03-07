@@ -4,14 +4,15 @@ using Frictionless;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DistributionPrototype
+namespace DistributionPrototype.UI
 {
 	public class NoiseDisplayPanel : MonoBehaviour
 	{
-		public Image NoiseImage;
-		public Image NoiseThresholdImage;
-		
-		private void Start()
+		[SerializeField] private Image _noiseImage;
+		[SerializeField] private Image _noiseThresholdImage;
+		[SerializeField] private GameObject _noNoiseGameObject;
+
+		private void Awake()
 		{
 			var messageRounter = ServiceFactory.Instance.Resolve<MessageRouter>();
 			messageRounter.AddHandler<GenerationStartedMessage>(message =>
@@ -21,12 +22,15 @@ namespace DistributionPrototype
 
 			messageRounter.AddHandler<SamplerNoiseGeneratedMessage>(message =>
 			{
-				NoiseImage.gameObject.SetActive(true);
+				_noNoiseGameObject.SetActive(false);
+				_noiseImage.gameObject.SetActive(true);
 				RenderNoise(message.Noise);
 			});
+
 			messageRounter.AddHandler<LimiterNoiseGeneratedMessage>(message =>
 			{
-				NoiseThresholdImage.gameObject.SetActive(true);
+				_noNoiseGameObject.SetActive(false);
+				_noiseThresholdImage.gameObject.SetActive(true);
 				RenderThreshold(message.Noise, message.Threshold);
 			});
 		}
@@ -34,8 +38,11 @@ namespace DistributionPrototype
 		private void ResetVisualization()
 		{
 			// Deactivate both images at start so only the used noises are active
-			NoiseImage.gameObject.SetActive(false);
-			NoiseThresholdImage.gameObject.SetActive(false);
+			_noiseImage.gameObject.SetActive(false);
+			_noiseThresholdImage.gameObject.SetActive(false);
+
+			// By default show the "no noise used" feedback
+			_noNoiseGameObject.SetActive(true);
 		}
 
 		public void RenderNoise(Grid2D<float> noise)
@@ -52,7 +59,7 @@ namespace DistributionPrototype
 			}
 
 			noiseTex.Apply();
-			NoiseImage.SetTexture(noiseTex);
+			_noiseImage.SetTexture(noiseTex);
 		}
 
 		private void RenderThreshold(Grid2D<float> noise, float threshold)
@@ -71,7 +78,7 @@ namespace DistributionPrototype
 			}
 			
 			noiseThresholdTex.Apply();
-			NoiseThresholdImage.SetTexture(noiseThresholdTex);
+			_noiseThresholdImage.SetTexture(noiseThresholdTex);
 		}
 	}
 }

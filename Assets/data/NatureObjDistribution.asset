@@ -18,5 +18,5 @@ MonoBehaviour:
   - {fileID: 191138, guid: 4e2dd32c733005a44b50004d673dc653, type: 2}
   DistributionStrategy: 2
   RadiusFactor: 1.5
-  NoiseLimitedSpawn: 1
+  NoiseLimitedSpawn: 0
   SpawnThreshold: 0.5
