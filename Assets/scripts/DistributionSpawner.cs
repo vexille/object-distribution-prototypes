@@ -12,12 +12,14 @@ namespace DistributionPrototype.Distribution
 		private MessageRouter _messageRouter;
 		private ConfigFacade _configFacade;
 		private List<GameObject> _spawnedObjects;
+		private GameObject _spawnRoot;
 		private Vector3 _minPos;
 		private float _width;
 		private float _height;
 
 		private void Start()
 		{
+			_spawnRoot = new GameObject("SpawnedObjects");
 			_spawnedObjects = new List<GameObject>();
 
 			var rend = GetComponentInChildren<Renderer>();
@@ -67,12 +69,14 @@ namespace DistributionPrototype.Distribution
 			{
 				var pos = sample.ToVector3();
 				var spawned = Instantiate(
-					_configFacade.DistributionConfig.GetRandomPrefab(), 
-					pos + _minPos,
-					Quaternion.identity);
+					_configFacade.DistributionConfig.GetRandomPrefab(),
+					_spawnRoot.transform);
 
+				spawned.transform.position = pos + _minPos;
 				_spawnedObjects.Add(spawned);
 			});
+
+			StaticBatchingUtility.Combine(_spawnRoot);
 		}
 	}
 }

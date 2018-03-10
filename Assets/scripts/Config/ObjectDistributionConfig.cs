@@ -11,8 +11,7 @@ namespace DistributionPrototype.Config
 			UniformPoissonSamplerB,
 			NonUniformPoissonSampler
 		}
-
-		public GameObject Prefab;
+		
 		public GameObject[] PrefabList;
 		public Strategy DistributionStrategy;
 		public float RadiusFactor = 1.5f;
