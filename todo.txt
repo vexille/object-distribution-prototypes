@@ -1,4 +1,0 @@
-- Object layers with independent noise configurations
-- Configuration files cleanup
-- Moving camera
-- UI polishing
