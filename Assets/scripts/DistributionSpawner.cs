@@ -7,10 +7,17 @@ using UnityEngine;
 
 namespace DistributionPrototype.Distribution
 {
+	/// <summary>
+	/// Will spawn objects based on the data fetched from <see cref="ConfigFacade"/>
+	/// and the points sampled by an <see cref="ISamplerDecorator"/>.
+	/// <seealso cref="SamplerDecoratorFactory"/>
+	/// </summary>
 	public class DistributionSpawner : MonoBehaviour
 	{
+		private SamplerDecoratorFactory _decoratorFactory;
 		private MessageRouter _messageRouter;
 		private ConfigFacade _configFacade;
+
 		private List<GameObject> _spawnedObjects;
 		private GameObject _spawnRoot;
 		private Vector3 _minPos;
@@ -22,9 +29,9 @@ namespace DistributionPrototype.Distribution
 			_spawnRoot = new GameObject("SpawnedObjects");
 			_spawnedObjects = new List<GameObject>();
 
+			// Get child renderer that will define the spawn area
 			var rend = GetComponentInChildren<Renderer>();
 			_minPos = rend.bounds.min;
-
 			_width = rend.bounds.size.x;
 			_height = rend.bounds.size.z;
 
@@ -33,39 +40,35 @@ namespace DistributionPrototype.Distribution
 
 			_configFacade = ServiceFactory.Instance.Resolve<ConfigFacade>();
 
+			// Create decorator factory with data from configFacade
+			_decoratorFactory = new SamplerDecoratorFactory(
+				_configFacade.NoiseConfig,
+				_configFacade.DistributionConfig);
+			_decoratorFactory.DebugPerformance = _configFacade.DebugPerformance;
+
 			Generate();
 		}
 
-		public void Generate()
+		private void Generate()
 		{
 			_messageRouter.RaiseMessage(new GenerationStartedMessage());
 
-			ClearSpawned();
-			SpawnObjects();
-		}
-
-		private void ClearSpawned()
-		{
-			if (_spawnedObjects.Count == 0) return;
-
-			foreach (var obj in _spawnedObjects)
+			// Clear spawned objects
+			if (_spawnedObjects.Count > 0)
 			{
-				Destroy(obj);
+				foreach (var obj in _spawnedObjects)
+				{
+					Destroy(obj);
+				}
+
+				_spawnedObjects.Clear();
 			}
 
-			_spawnedObjects.Clear();
-		}
+			// Create new sampler and spawn objects
+			ISamplerDecorator sampler = _decoratorFactory.GetSamplerDecorator(_width, _height);
 
-		public void SpawnObjects()
-		{
-			var decoratorFactory = new SamplerDecoratorFactory(
-				_configFacade.NoiseConfig,
-				_configFacade.DistributionConfig);
-			decoratorFactory.DebugPerformance = _configFacade.DebugPerformance;
-			ISamplerDecorator sampler = decoratorFactory.GetSamplerDecorator(_width, _height);
-			
 			sampler.Prepare();
-			sampler.Generate(delegate(Vector2 sample)
+			sampler.Generate(delegate (Vector2 sample)
 			{
 				var pos = sample.ToVector3();
 				var spawned = Instantiate(
@@ -76,6 +79,7 @@ namespace DistributionPrototype.Distribution
 				_spawnedObjects.Add(spawned);
 			});
 
+			// Setup all spawned objects for static batching
 			StaticBatchingUtility.Combine(_spawnRoot);
 		}
 	}

@@ -2,6 +2,9 @@
 
 namespace DistributionPrototype
 {
+	/// <summary>
+	/// A dirt simple camera controller for WASD movement
+	/// </summary>
 	public class CameraController : MonoBehaviour
 	{
 		[SerializeField] private float _speed;

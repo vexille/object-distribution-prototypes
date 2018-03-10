@@ -2,7 +2,9 @@
 
 namespace DistributionPrototype.Util
 {
+	//
 	// Adapted from: https://github.com/Flafla2/Remote2D-Engine
+	//
 	// https://github.com/Flafla2/Remote2D-Engine/blob/master/Remote2D/src/com/remote/remote2d/engine/logic/Noise2D.java
 	public static class NoiseGenerator
 	{

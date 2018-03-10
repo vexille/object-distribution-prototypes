@@ -1,5 +1,8 @@
 ﻿namespace DistributionPrototype.Distribution.Decorator
 {
+	/// <summary>
+	/// Base class for sampler decorators implementing <see cref="ISamplerDecorator"/>.
+	/// </summary>
 	public abstract class SamplerDecorator : ISamplerDecorator
 	{
 		protected float _width;

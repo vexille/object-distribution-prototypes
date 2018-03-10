@@ -3,13 +3,19 @@ using UnityEngine;
 
 namespace DistributionPrototype.Distribution.Decorator
 {
-	public class LimitedSpawnSamplerDecorator : ISamplerDecorator
+	/// <summary>
+	/// Limits the output of sampled points based on a noise grid and
+	/// a threshold values. For every sample, the corresponding noise value
+	/// is checked against the threshold so that only the ones with a
+	/// smaller value are passed to the <see cref="SampleGeneratedDelegate"/>.
+	/// </summary>
+	public class NoiseLimitedSamplerDecorator : ISamplerDecorator
 	{
 		private readonly ISamplerDecorator _decorator;
 		private readonly Grid2D<float> _noise;
 		private readonly float _spawnThreshold;
 
-		public LimitedSpawnSamplerDecorator(ISamplerDecorator decorator, 
+		public NoiseLimitedSamplerDecorator(ISamplerDecorator decorator, 
 			Grid2D<float> noise, float spawnThreshold)
 		{
 			_decorator = decorator;
@@ -21,7 +27,7 @@ namespace DistributionPrototype.Distribution.Decorator
 		{
 			_decorator.Prepare();
 		}
-
+		
 		public int Generate(SampleGeneratedDelegate generationDelegate)
 		{
 			int spawnCount = 0;

@@ -7,6 +7,11 @@ using UnityEngine;
 
 namespace DistributionPrototype.Distribution
 {
+	/// <summary>
+	/// Factory for sampler decorators that will encapsulate the underlying
+	/// sampling algorhithm. Works based on configuration data from
+	/// <see cref="NoiseConfig"/> and <see cref="ObjectDistributionConfig"/>.
+	/// </summary>
 	public class SamplerDecoratorFactory
 	{
 		private readonly MessageRouter _messageRouter;
@@ -14,9 +19,17 @@ namespace DistributionPrototype.Distribution
 		private readonly ObjectDistributionConfig _distributionConfig;
 		private float _width;
 		private float _height;
-
+		
+		/// <summary>
+		/// Gets and sets flag that will enable performance logging.
+		/// </summary>
 		public bool DebugPerformance { get; set; }
 
+		/// <summary>
+		/// Creates new factory with references to configuration data.
+		/// </summary>
+		/// <param name="noiseConfig"></param>
+		/// <param name="distributionConfig"></param>
 		public SamplerDecoratorFactory(
 			NoiseConfig noiseConfig,
 			ObjectDistributionConfig distributionConfig)
@@ -27,6 +40,13 @@ namespace DistributionPrototype.Distribution
 			_messageRouter = ServiceFactory.Instance.Resolve<MessageRouter>();
 		}
 
+		/// <summary>
+		/// Creates a new sampler that will act on the given dimensions. The new
+		/// sampler will be created using the current config data.
+		/// </summary>
+		/// <param name="width">Width of the spawn area</param>
+		/// <param name="height">Height of the spawn area</param>
+		/// <returns>The newly created sampler decorator</returns>
 		public ISamplerDecorator GetSamplerDecorator(float width, float height)
 		{
 			_width = width;
@@ -80,7 +100,7 @@ namespace DistributionPrototype.Distribution
 					Threshold = _distributionConfig.SpawnThreshold
 				});
 
-			return new LimitedSpawnSamplerDecorator(
+			return new NoiseLimitedSamplerDecorator(
 				sampler,
 				spawnNoise,
 				_distributionConfig.SpawnThreshold);

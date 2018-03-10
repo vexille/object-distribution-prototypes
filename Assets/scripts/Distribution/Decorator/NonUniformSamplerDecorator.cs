@@ -4,14 +4,18 @@ using UnityEngine;
 
 namespace DistributionPrototype.Distribution.Decorator
 {
+	/// <summary>
+	/// Decorator for a non-uniform poisson-disc sampler. This sampler uses 
+	/// a noise grid to drive the distances between the sampled points.
+	/// </summary>
 	public class NonUniformSamplerDecorator : SamplerDecorator
 	{
-		private float _radius;
-		private Grid2D<float> _distanceNoise;
+		private readonly float _radius;
+		private readonly Grid2D<float> _distanceNoise;
 		private Grid2D<float> _distances;
 
-		public NonUniformSamplerDecorator(float width, float height, float radius, Grid2D<float> distanceNoise)
-			: base(width, height)
+		public NonUniformSamplerDecorator(float width, float height, float radius, 
+			Grid2D<float> distanceNoise) : base(width, height)
 		{
 			_radius = radius;
 			_distanceNoise = distanceNoise;
@@ -24,8 +28,13 @@ namespace DistributionPrototype.Distribution.Decorator
 			_distances = new Grid2D<float>(_distanceNoise.Width, _distanceNoise.Height);
 			for (int i = 0; i < _distanceNoise.Count; i++)
 			{
-				var val = Mathf.Lerp(_radius * 1.1f, _radius * 3f, _distanceNoise.Get(i));
-				_distances.Set(i, val);
+				// Calculates the current distance value based on the given radius
+				var distanceValue = Mathf.Lerp(
+					_radius * 1.1f,
+					_radius * 2.8f,
+					_distanceNoise.Get(i));
+
+				_distances.Set(i, distanceValue);
 			}
 		}
 

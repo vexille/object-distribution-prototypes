@@ -2,6 +2,11 @@
 
 namespace DistributionPrototype.Distribution.Decorator
 {
+	/// <summary>
+	/// Decorator for a uniform poisson-disc sampler. Will produce a similar
+	/// result as <see cref="UniformSamplerADecorator"/>, but with a different
+	/// underlying algorhithm.
+	/// </summary>
 	public class UniformSamplerBDecorator : SamplerDecorator
 	{
 		private float _radius;

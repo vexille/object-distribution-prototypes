@@ -19,7 +19,7 @@ namespace DistributionPrototype.Distribution.Decorator
 		/// Generates a set of sampled points using the underlying implementation.
 		/// </summary>
 		/// <param name="generationDelegate">
-		/// Callback fired for every sampled point
+		/// Callback synchronously fired for every sampled point
 		/// </param>
 		/// <returns>Count of generated points</returns>
 		int Generate(SampleGeneratedDelegate generationDelegate);

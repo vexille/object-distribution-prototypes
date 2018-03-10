@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace DistributionPrototype.Distribution.Decorator
 {
+	/// <summary>
+	/// Decorator for a uniform poisson-disc sampler. Will produce a similar
+	/// result as <see cref="UniformSamplerBDecorator"/>, but with a different
+	/// underlying algorhithm.
+	/// </summary>
 	public class UniformSamplerADecorator : SamplerDecorator
 	{
 		private float _radius;

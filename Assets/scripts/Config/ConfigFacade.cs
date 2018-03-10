@@ -7,7 +7,7 @@ namespace DistributionPrototype.Config
 {
 	/// <summary>
 	/// Provides access to configuration ScriptableObject instances 
-	/// and values.   This class could better encapsulate these instances
+	/// and values. This class could better encapsulate these instances
 	/// to centralize and control modification, but for the scope of this 
 	/// prototype the complexity overhead is probably not worth it.
 	/// </summary>

@@ -2,22 +2,28 @@
 
 namespace DistributionPrototype.Distribution.Decorator
 {
+	/// <summary>
+	/// Measures the elapsed time the underlying delegate spends on both
+	/// <see cref="ISamplerDecorator.Prepare"/> and <see cref="ISamplerDecorator.Generate"/>.
+	/// The resulting times will be provided through <see cref="PrepareTimeDelegate"/> and
+	/// <see cref="GenerateTimeDelegate"/>.
+	/// </summary>
 	public class TimedSamplerDecorator : ISamplerDecorator
 	{
-		public delegate void PrepareDelegate(double elapsed);
-
-		public delegate void GenerateDelegate(double elapsed);
+		public delegate void PrepareTimeDelegate(double elapsed);
+		public delegate void GenerateTimeDelegate(double elapsed);
 
 		private readonly ISamplerDecorator _decorator;
-		private readonly PrepareDelegate _prepare;
-		private readonly GenerateDelegate _generate;
+		private readonly PrepareTimeDelegate _prepareTimeDelegate;
+		private readonly GenerateTimeDelegate _generateTimeDelegate;
 
 		public TimedSamplerDecorator(ISamplerDecorator decorator, 
-			PrepareDelegate prepare, GenerateDelegate generate)
+			PrepareTimeDelegate prepareTimeDelegate, 
+			GenerateTimeDelegate generateTimeDelegate)
 		{
 			_decorator = decorator;
-			_prepare = prepare;
-			_generate = generate;
+			_prepareTimeDelegate = prepareTimeDelegate;
+			_generateTimeDelegate = generateTimeDelegate;
 		}
 
 		public void Prepare()
@@ -28,7 +34,8 @@ namespace DistributionPrototype.Distribution.Decorator
 			_decorator.Prepare();
 
 			watch.Stop();
-			if (_prepare != null) _prepare(watch.Elapsed.TotalSeconds);
+
+			_prepareTimeDelegate(watch.Elapsed.TotalSeconds);
 		}
 
 		public int Generate(SampleGeneratedDelegate generationDelegate)
@@ -39,7 +46,8 @@ namespace DistributionPrototype.Distribution.Decorator
 			int result = _decorator.Generate(generationDelegate);
 
 			watch.Stop();
-			if (_generate != null) _generate(watch.Elapsed.TotalSeconds);
+
+			_generateTimeDelegate(watch.Elapsed.TotalSeconds);
 
 			return result;
 		}
