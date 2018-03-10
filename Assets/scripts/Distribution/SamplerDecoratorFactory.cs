@@ -9,7 +9,7 @@ namespace DistributionPrototype.Distribution
 {
 	/// <summary>
 	/// Factory for sampler decorators that will encapsulate the underlying
-	/// sampling algorhithm. Works based on configuration data from
+	/// sampling algorithm. Works based on configuration data from
 	/// <see cref="NoiseConfig"/> and <see cref="ObjectDistributionConfig"/>.
 	/// </summary>
 	public class SamplerDecoratorFactory
