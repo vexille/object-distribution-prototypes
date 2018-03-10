@@ -11,10 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ccb68718929f2940bcecc99d0233062, type: 3}
   m_Name: ObjectDistributionConfig
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 1037047132259268, guid: c02a5b7eed497fd4195543203cb42900, type: 2}
   PrefabList:
   - {fileID: 1037047132259268, guid: c02a5b7eed497fd4195543203cb42900, type: 2}
-  DistributionStrategy: 2
+  DistributionStrategy: 0
   RadiusFactor: 3.5
   NoiseLimitedSpawn: 0
   SpawnThreshold: 0.5
