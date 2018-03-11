@@ -4,6 +4,7 @@ using DistributionPrototype.Messages;
 using Frictionless;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace DistributionPrototype.Distribution
 {
@@ -24,6 +25,15 @@ namespace DistributionPrototype.Distribution
 		private float _width;
 		private float _height;
 
+		[Inject]
+		private void Init(
+			ConfigFacade configFacade, 
+			SamplerDecoratorFactory decoratorFactory)
+		{
+			_configFacade = configFacade;
+			_decoratorFactory = decoratorFactory;
+		}
+
 		private void Start()
 		{
 			_spawnRoot = new GameObject("SpawnedObjects");
@@ -37,14 +47,6 @@ namespace DistributionPrototype.Distribution
 
 			_messageRouter = ServiceFactory.Instance.Resolve<MessageRouter>();
 			_messageRouter.AddHandler<GenerationRequestedMessage>(m => Generate());
-
-			_configFacade = ServiceFactory.Instance.Resolve<ConfigFacade>();
-
-			// Create decorator factory with data from configFacade
-			_decoratorFactory = new SamplerDecoratorFactory(
-				_configFacade.NoiseConfig,
-				_configFacade.DistributionConfig);
-			_decoratorFactory.DebugPerformance = _configFacade.DebugPerformance;
 
 			Generate();
 		}

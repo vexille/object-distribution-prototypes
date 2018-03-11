@@ -4,6 +4,7 @@ using DistributionPrototype.Util;
 using Frictionless;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace DistributionPrototype.UI
 {
@@ -13,6 +14,12 @@ namespace DistributionPrototype.UI
 		[SerializeField] private IntSliderField _octaveCountSliderField;
 
 		private ConfigFacade _configFacade;
+		
+		[Inject]
+		private void Init(ConfigFacade configFacade)
+		{
+			_configFacade = configFacade;
+		}
 
 		private void Awake()
 		{
@@ -21,8 +28,6 @@ namespace DistributionPrototype.UI
 
 		private void Start()
 		{
-			_configFacade = ServiceFactory.Instance.Resolve<ConfigFacade>();
-
 			// Setup noise type dropdown
 			NoiseType noiseType = _configFacade.NoiseConfig.Type;
 			_noiseTypeDropdown.value = (int) noiseType;

@@ -4,6 +4,7 @@ using DistributionPrototype.Messages;
 using DistributionPrototype.Util;
 using Frictionless;
 using UnityEngine;
+using Zenject;
 
 namespace DistributionPrototype.Distribution
 {
@@ -14,16 +15,15 @@ namespace DistributionPrototype.Distribution
 	/// </summary>
 	public class SamplerDecoratorFactory
 	{
-		private readonly MessageRouter _messageRouter;
 		private readonly NoiseConfig _noiseConfig;
 		private readonly ObjectDistributionConfig _distributionConfig;
 		private float _width;
 		private float _height;
 		
 		/// <summary>
-		/// Gets and sets flag that will enable performance logging.
+		/// flag that will enable performance logging.
 		/// </summary>
-		public bool DebugPerformance { get; set; }
+		private bool _debugPerformance;
 
 		/// <summary>
 		/// Creates new factory with references to configuration data.
@@ -32,12 +32,12 @@ namespace DistributionPrototype.Distribution
 		/// <param name="distributionConfig"></param>
 		public SamplerDecoratorFactory(
 			NoiseConfig noiseConfig,
-			ObjectDistributionConfig distributionConfig)
+			ObjectDistributionConfig distributionConfig,
+			[Inject(Id = "debugPerformance")] bool debugPerformance)
 		{
 			_noiseConfig = noiseConfig;
 			_distributionConfig = distributionConfig;
-
-			_messageRouter = ServiceFactory.Instance.Resolve<MessageRouter>();
+			_debugPerformance = debugPerformance;
 		}
 
 		/// <summary>
@@ -74,7 +74,7 @@ namespace DistributionPrototype.Distribution
 				case ObjectDistributionConfig.Strategy.NonUniformPoissonSampler:
 					Grid2D<float> noise = GenerateNoise();
 
-					_messageRouter.RaiseMessage(
+					ServiceFactory.Instance.Resolve<MessageRouter>().RaiseMessage(
 						new SamplerNoiseGeneratedMessage { Noise = noise });
 
 					return new NonUniformSamplerDecorator(_width, _height, radius, noise);
@@ -93,7 +93,7 @@ namespace DistributionPrototype.Distribution
 
 			Grid2D<float> spawnNoise = GenerateNoise();
 
-			_messageRouter.RaiseMessage(
+			ServiceFactory.Instance.Resolve<MessageRouter>().RaiseMessage(
 				new LimiterNoiseGeneratedMessage
 				{
 					Noise = spawnNoise,
@@ -108,7 +108,7 @@ namespace DistributionPrototype.Distribution
 
 		private ISamplerDecorator SetupTimedDecorator(ISamplerDecorator sampler)
 		{
-			if (!DebugPerformance)
+			if (!_debugPerformance)
 			{
 				return sampler;
 			}

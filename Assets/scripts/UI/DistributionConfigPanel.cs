@@ -4,6 +4,7 @@ using DistributionPrototype.Util;
 using Frictionless;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace DistributionPrototype.UI
 {
@@ -16,6 +17,12 @@ namespace DistributionPrototype.UI
 
 		private ConfigFacade _configFacade;
 
+		[Inject]
+		private void Init(ConfigFacade configFacade)
+		{
+			_configFacade = configFacade;
+		}
+
 		private void Awake()
 		{
 			UiUtils.PopulateDropboxWithEnum(_distributionStrategyDropdown,
@@ -24,8 +31,6 @@ namespace DistributionPrototype.UI
 
 		private void Start()
 		{
-			_configFacade = ServiceFactory.Instance.Resolve<ConfigFacade>();
-
 			// Setup distribution strategy dropdown
 			ObjectDistributionConfig.Strategy distributionStrategy = 
 				_configFacade.DistributionConfig.DistributionStrategy;

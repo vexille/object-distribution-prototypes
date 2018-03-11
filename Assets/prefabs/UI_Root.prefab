@@ -72,6 +72,7 @@ GameObject:
   - component: {fileID: 224099572316865998}
   - component: {fileID: 222533754398293832}
   - component: {fileID: 114949942027357896}
+  - component: {fileID: 114017578943603344}
   - component: {fileID: 114444983188111570}
   m_Layer: 5
   m_Name: noise_visualization_panel
@@ -559,6 +560,7 @@ GameObject:
   - component: {fileID: 224247390933238074}
   - component: {fileID: 222840737193449156}
   - component: {fileID: 114797183904434734}
+  - component: {fileID: 114066351513126096}
   m_Layer: 5
   m_Name: distribution_config_panel
   m_TagString: Untagged
@@ -965,6 +967,7 @@ GameObject:
   - component: {fileID: 224940151661800864}
   - component: {fileID: 222304049036748306}
   - component: {fileID: 114054380097353116}
+  - component: {fileID: 114848329027084914}
   m_Layer: 5
   m_Name: noise_config_panel
   m_TagString: Untagged
@@ -1048,6 +1051,7 @@ GameObject:
   - component: {fileID: 224870260805344874}
   - component: {fileID: 222884430967189588}
   - component: {fileID: 114381658887864818}
+  - component: {fileID: 114261588322313068}
   m_Layer: 5
   m_Name: button_control_panel
   m_TagString: Untagged
@@ -1481,6 +1485,22 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.ScrollRect+ScrollRectEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114017578943603344
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1019809694782750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 114949942027357896}
+  _identifier: 
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!114 &114035845203616746
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1642,6 +1662,22 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Dropdown+DropdownEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114066351513126096
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1272989632357250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 114797183904434734}
+  _identifier: 
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!114 &114081974673218840
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1938,6 +1974,22 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Option A
+--- !u!114 &114261588322313068
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1795934255065546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 114381658887864818}
+  _identifier: 
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!114 &114267648660640110
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3340,6 +3392,22 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114848329027084914
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1684581755774646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 114054380097353116}
+  _identifier: 
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!114 &114849863804419422
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4247,7 +4315,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -5.500173, y: -14.257046}
+  m_AnchoredPosition: {x: -5.5001736, y: -14.257046}
   m_SizeDelta: {x: 215, y: 21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224069964252735250
@@ -4343,7 +4411,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 119.5, y: 77.24}
+  m_AnchoredPosition: {x: 119.5, y: 77.23999}
   m_SizeDelta: {x: 239, y: 154.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224132028754476898
@@ -4513,7 +4581,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 125, y: -122.6}
+  m_AnchoredPosition: {x: 125, y: -122.600006}
   m_SizeDelta: {x: 250, y: 245}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224250344674027348
@@ -4797,7 +4865,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -5.500173, y: -14.257046}
+  m_AnchoredPosition: {x: -5.5001736, y: -14.257046}
   m_SizeDelta: {x: 215, y: 21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224397365871687264
@@ -5115,7 +5183,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 139.8, y: 27.7}
+  m_AnchoredPosition: {x: 139.8, y: 27.700195}
   m_SizeDelta: {x: 625.7, y: 60.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224606267754728810
