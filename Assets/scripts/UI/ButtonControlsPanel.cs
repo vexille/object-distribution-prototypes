@@ -1,7 +1,7 @@
-﻿using DistributionPrototype.Messages;
-using Frictionless;
+﻿using DistributionPrototype.Signals;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace DistributionPrototype.UI
 {
@@ -10,19 +10,27 @@ namespace DistributionPrototype.UI
 		[SerializeField] private Button _generateButton;
 		[SerializeField] private Button _saveChangesButton;
 
-		private void Awake()
+		private GenerationRequestedSignal _generationRequestedSignal;
+		private SaveChangesRequestedSignal _saveChangesRequestedSignal;
+
+		[Inject]
+		public void Init(
+			GenerationRequestedSignal generationRequestedSignal,
+			SaveChangesRequestedSignal saveChangesRequestedSignal)
 		{
-			var messageRouter = ServiceFactory.Instance.Resolve<MessageRouter>();
+			_generationRequestedSignal = generationRequestedSignal;
+			_saveChangesRequestedSignal = saveChangesRequestedSignal;
+			
 			_generateButton.onClick.AddListener(() =>
 			{
-				messageRouter.RaiseMessage(new GenerationRequestedMessage());
+				_generationRequestedSignal.Fire();
 			});
 
 			// Define guard the save changes button, as it should only be used in the editor
 #if UNITY_EDITOR
 			_saveChangesButton.onClick.AddListener(() =>
 			{
-				messageRouter.RaiseMessage(new SaveChangesRequestMessage());
+				_saveChangesRequestedSignal.Fire();
 			});
 #else
 			_saveChangesButton.gameObject.SetActive(false);

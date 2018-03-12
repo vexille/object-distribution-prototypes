@@ -1,7 +1,7 @@
-﻿using DistributionPrototype.Config;
+﻿using System;
+using DistributionPrototype.Config;
 using DistributionPrototype.Distribution.Decorator;
-using DistributionPrototype.Messages;
-using Frictionless;
+using DistributionPrototype.Signals;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
@@ -13,10 +13,12 @@ namespace DistributionPrototype.Distribution
 	/// and the points sampled by an <see cref="ISamplerDecorator"/>.
 	/// <seealso cref="SamplerDecoratorFactory"/>
 	/// </summary>
-	public class DistributionSpawner : MonoBehaviour
+	public class DistributionSpawner : MonoBehaviour, IDisposable
 	{
+		private GenerationStartedSignal _generationStartedSignal;
+		private GenerationRequestedSignal _generationRequestedSignal;
+
 		private SamplerDecoratorFactory _decoratorFactory;
-		private MessageRouter _messageRouter;
 		private ConfigFacade _configFacade;
 
 		private List<GameObject> _spawnedObjects;
@@ -26,12 +28,22 @@ namespace DistributionPrototype.Distribution
 		private float _height;
 
 		[Inject]
-		private void Init(
+		public void Init(
 			ConfigFacade configFacade, 
-			SamplerDecoratorFactory decoratorFactory)
+			SamplerDecoratorFactory decoratorFactory,
+			GenerationStartedSignal generationStartedSignal,
+			GenerationRequestedSignal generationRequestedSignal)
 		{
 			_configFacade = configFacade;
 			_decoratorFactory = decoratorFactory;
+			_generationStartedSignal = generationStartedSignal;
+			_generationRequestedSignal = generationRequestedSignal;
+			_generationRequestedSignal.Listen(Generate);
+		}
+
+		public void Dispose()
+		{
+			_generationRequestedSignal.Unlisten(Generate);
 		}
 
 		private void Start()
@@ -45,15 +57,12 @@ namespace DistributionPrototype.Distribution
 			_width = rend.bounds.size.x;
 			_height = rend.bounds.size.z;
 
-			_messageRouter = ServiceFactory.Instance.Resolve<MessageRouter>();
-			_messageRouter.AddHandler<GenerationRequestedMessage>(m => Generate());
-
 			Generate();
 		}
 
 		private void Generate()
 		{
-			_messageRouter.RaiseMessage(new GenerationStartedMessage());
+			_generationStartedSignal.Fire();
 
 			// Clear spawned objects
 			if (_spawnedObjects.Count > 0)

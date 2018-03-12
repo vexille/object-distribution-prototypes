@@ -1,7 +1,6 @@
 ﻿using DistributionPrototype.Config;
 using DistributionPrototype.UI.Components;
 using DistributionPrototype.Util;
-using Frictionless;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;

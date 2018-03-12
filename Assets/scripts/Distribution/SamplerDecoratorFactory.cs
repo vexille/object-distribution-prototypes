@@ -1,8 +1,7 @@
 ﻿using DistributionPrototype.Config;
 using DistributionPrototype.Distribution.Decorator;
-using DistributionPrototype.Messages;
+using DistributionPrototype.Signals;
 using DistributionPrototype.Util;
-using Frictionless;
 using UnityEngine;
 using Zenject;
 
@@ -15,8 +14,10 @@ namespace DistributionPrototype.Distribution
 	/// </summary>
 	public class SamplerDecoratorFactory
 	{
-		private readonly NoiseConfig _noiseConfig;
-		private readonly ObjectDistributionConfig _distributionConfig;
+		private SamplerNoiseGeneratedSignal _samplerNoiseGeneratedSignal;
+		private LimiterNoiseGeneratedSignal _limiterNoiseGeneratedSignal;
+
+		private readonly ConfigFacade _configFacade;
 		private float _width;
 		private float _height;
 		
@@ -28,16 +29,21 @@ namespace DistributionPrototype.Distribution
 		/// <summary>
 		/// Creates new factory with references to configuration data.
 		/// </summary>
-		/// <param name="noiseConfig"></param>
-		/// <param name="distributionConfig"></param>
 		public SamplerDecoratorFactory(
-			NoiseConfig noiseConfig,
-			ObjectDistributionConfig distributionConfig,
+			ConfigFacade configFacade,
 			[Inject(Id = "debugPerformance")] bool debugPerformance)
 		{
-			_noiseConfig = noiseConfig;
-			_distributionConfig = distributionConfig;
+			_configFacade = configFacade;
 			_debugPerformance = debugPerformance;
+		}
+
+		[Inject]
+		public void SetSignals(
+			SamplerNoiseGeneratedSignal samplerNoiseGeneratedSignal,
+			LimiterNoiseGeneratedSignal limiterNoiseGeneratedSignal)
+		{
+			_samplerNoiseGeneratedSignal = samplerNoiseGeneratedSignal;
+			_limiterNoiseGeneratedSignal = limiterNoiseGeneratedSignal;
 		}
 
 		/// <summary>
@@ -61,9 +67,10 @@ namespace DistributionPrototype.Distribution
 
 		private ISamplerDecorator GetRootSampler()
 		{
-			float radius = _distributionConfig.GetLargestRadius() * _distributionConfig.RadiusFactor;
+			var distributionConfig = _configFacade.DistributionConfig;
+			float radius = distributionConfig.GetLargestRadius() * distributionConfig.RadiusFactor;
 
-			switch (_distributionConfig.DistributionStrategy)
+			switch (distributionConfig.DistributionStrategy)
 			{
 				case ObjectDistributionConfig.Strategy.UniformPoissonSamplerA:
 					return new UniformSamplerADecorator(_width, _height, radius);
@@ -73,9 +80,8 @@ namespace DistributionPrototype.Distribution
 
 				case ObjectDistributionConfig.Strategy.NonUniformPoissonSampler:
 					Grid2D<float> noise = GenerateNoise();
-
-					ServiceFactory.Instance.Resolve<MessageRouter>().RaiseMessage(
-						new SamplerNoiseGeneratedMessage { Noise = noise });
+					
+					_samplerNoiseGeneratedSignal.Fire(noise);
 
 					return new NonUniformSamplerDecorator(_width, _height, radius, noise);
 
@@ -86,24 +92,20 @@ namespace DistributionPrototype.Distribution
 
 		private ISamplerDecorator SetupNoiseLimitedDecorator(ISamplerDecorator sampler)
 		{
-			if (!_distributionConfig.NoiseLimitedSpawn)
+			var distributionConfig = _configFacade.DistributionConfig;
+			if (!distributionConfig.NoiseLimitedSpawn)
 			{
 				return sampler;
 			}
 
 			Grid2D<float> spawnNoise = GenerateNoise();
 
-			ServiceFactory.Instance.Resolve<MessageRouter>().RaiseMessage(
-				new LimiterNoiseGeneratedMessage
-				{
-					Noise = spawnNoise,
-					Threshold = _distributionConfig.SpawnThreshold
-				});
+			_limiterNoiseGeneratedSignal.Fire(spawnNoise, distributionConfig.SpawnThreshold);
 
 			return new NoiseLimitedSamplerDecorator(
 				sampler,
 				spawnNoise,
-				_distributionConfig.SpawnThreshold);
+				distributionConfig.SpawnThreshold);
 		}
 
 		private ISamplerDecorator SetupTimedDecorator(ISamplerDecorator sampler)
@@ -121,10 +123,10 @@ namespace DistributionPrototype.Distribution
 
 		private Grid2D<float> GenerateNoise()
 		{
-			return _noiseConfig.Type == NoiseType.Unity
+			return _configFacade.NoiseConfig.Type == NoiseType.Unity
 				? NoiseGenerator.UnityNoise ((int)_width, (int)_height)
-				: NoiseGenerator.PerlinNoise((int)_width, (int)_height, 
-					_noiseConfig.OctaveCount);
+				: NoiseGenerator.PerlinNoise((int)_width, (int)_height,
+					_configFacade.NoiseConfig.OctaveCount);
 		}
 	}
 }

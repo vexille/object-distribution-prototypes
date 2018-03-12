@@ -1500,7 +1500,7 @@ MonoBehaviour:
   - {fileID: 114949942027357896}
   _identifier: 
   _context: {fileID: 0}
-  _bindType: 0
+  _bindType: 2
 --- !u!114 &114035845203616746
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1677,7 +1677,7 @@ MonoBehaviour:
   - {fileID: 114797183904434734}
   _identifier: 
   _context: {fileID: 0}
-  _bindType: 0
+  _bindType: 2
 --- !u!114 &114081974673218840
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1989,7 +1989,7 @@ MonoBehaviour:
   - {fileID: 114381658887864818}
   _identifier: 
   _context: {fileID: 0}
-  _bindType: 0
+  _bindType: 2
 --- !u!114 &114267648660640110
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3407,7 +3407,7 @@ MonoBehaviour:
   - {fileID: 114054380097353116}
   _identifier: 
   _context: {fileID: 0}
-  _bindType: 0
+  _bindType: 2
 --- !u!114 &114849863804419422
 MonoBehaviour:
   m_ObjectHideFlags: 1

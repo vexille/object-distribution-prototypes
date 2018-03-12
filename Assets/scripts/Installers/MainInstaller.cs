@@ -27,7 +27,9 @@ namespace DistributionPrototype.Installers
 			
 			Container.Bind<ConfigFacade>().AsSingle();
 			Container.Bind<SamplerDecoratorFactory>().AsSingle();
-			Container.Bind<DistributionSpawner>().FromComponentInHierarchy();
+
+			// Bind signals
+			SignalsInstaller.Install(Container);
 		}
 	}
 }

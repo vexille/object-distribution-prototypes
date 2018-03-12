@@ -1,38 +1,61 @@
-﻿using DistributionPrototype.Messages;
+﻿using System;
+using DistributionPrototype.Signals;
 using DistributionPrototype.Util;
-using Frictionless;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace DistributionPrototype.UI
 {
-	public class NoiseDisplayPanel : MonoBehaviour
+	public class NoiseDisplayPanel : MonoBehaviour, IDisposable
 	{
 		[SerializeField] private Image _noiseImage;
 		[SerializeField] private Image _noiseThresholdImage;
 		[SerializeField] private GameObject _noNoiseGameObject;
 
-		private void Awake()
+		private GenerationStartedSignal _generationStartedSignal;
+		private SamplerNoiseGeneratedSignal _samplerNoiseGeneratedSignal;
+		private LimiterNoiseGeneratedSignal _limiterNoiseGeneratedSignal;
+
+		[Inject]
+		public void SetSignals(
+			GenerationStartedSignal generationStartedSignal,
+			SamplerNoiseGeneratedSignal samplerNoiseGeneratedSignal,
+			LimiterNoiseGeneratedSignal limiterNoiseGeneratedSignal)
 		{
-			var messageRounter = ServiceFactory.Instance.Resolve<MessageRouter>();
-			messageRounter.AddHandler<GenerationStartedMessage>(message =>
-			{
-				ResetVisualization();
-			});
+			_generationStartedSignal = generationStartedSignal;
+			_samplerNoiseGeneratedSignal = samplerNoiseGeneratedSignal;
+			_limiterNoiseGeneratedSignal = limiterNoiseGeneratedSignal;
 
-			messageRounter.AddHandler<SamplerNoiseGeneratedMessage>(message =>
-			{
-				_noNoiseGameObject.SetActive(false);
-				_noiseImage.gameObject.SetActive(true);
-				RenderNoise(message.Noise);
-			});
+			_generationStartedSignal.Listen(OnGenerationStarted);
+			_samplerNoiseGeneratedSignal.Listen(OnSamplerNoiseGenerated);
+			_limiterNoiseGeneratedSignal.Listen(OnLimiterNoiseGenerated);
+		}
 
-			messageRounter.AddHandler<LimiterNoiseGeneratedMessage>(message =>
-			{
-				_noNoiseGameObject.SetActive(false);
-				_noiseThresholdImage.gameObject.SetActive(true);
-				RenderThreshold(message.Noise, message.Threshold);
-			});
+		public void Dispose()
+		{
+			_generationStartedSignal.Unlisten(OnGenerationStarted);
+			_samplerNoiseGeneratedSignal.Unlisten(OnSamplerNoiseGenerated);
+			_limiterNoiseGeneratedSignal.Unlisten(OnLimiterNoiseGenerated);
+		}
+
+		public void OnGenerationStarted()
+		{
+			ResetVisualization();
+		}
+
+		public void OnSamplerNoiseGenerated(Grid2D<float> noise)
+		{
+			_noNoiseGameObject.SetActive(false);
+			_noiseImage.gameObject.SetActive(true);
+			RenderNoise(noise);
+		}
+
+		public void OnLimiterNoiseGenerated(Grid2D<float> noise, float threshold)
+		{
+			_noNoiseGameObject.SetActive(false);
+			_noiseThresholdImage.gameObject.SetActive(true);
+			RenderThreshold(noise, threshold);
 		}
 
 		private void ResetVisualization()
